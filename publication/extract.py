@@ -10,6 +10,7 @@ import json
 import requests
 from typing import List
 
+
 class Extract():
     '''
     This class contains tools for webscraping Coventory University website
@@ -40,7 +41,7 @@ class Extract():
         if not isinstance(page_to_parse, int):
             raise TypeError(f"argument 'page_to_parse' must be an integer, \
                             {type(page_to_parse)} given")
-        
+
         self._page_to_parse = page_to_parse
 
     @property
@@ -49,7 +50,7 @@ class Extract():
             return self.__pubs
         else:
             raise TypeError("Web scrape engine has not been executed.")
-    
+
     @classmethod
     def check_author_in_author_links(cls, authors_with_link: List[str], author: str) -> bool:
         '''
@@ -58,7 +59,7 @@ class Extract():
         Arguments:
             authors_with_links: a list of authors with links
             author: Name of author to check
-        
+
         Return:
             Bool
         '''
@@ -67,7 +68,7 @@ class Extract():
             if author == author_:
                 return True
         return False
-    
+
     def webscrape(self) -> None:
         '''
         webscrape engine
@@ -75,8 +76,8 @@ class Extract():
         for page in range(self._page_to_parse):
             if page != 0:
                 self.__url = f"https://pureportal.coventry.ac.uk/en/organisations/school-of-economics-finance-and-accounting/publications/?page={page}"
-            
-            r = requests.get(self.__url,headers=self.__headers)
+
+            r = requests.get(self.__url, headers=self.__headers,)
             soup = BeautifulSoup(r.content, features="lxml")
 
             for item in soup.find_all("li", class_="list-result-item"):
@@ -84,9 +85,9 @@ class Extract():
                     "publication": "",
                     "publication_link": "",
                 }
+
                 if item.find_all("a", rel="ContributionToJournal"):
                     items = item.find_all("a", rel="ContributionToJournal")
-                    
                 elif item.find_all("a", rel="ContributionToBookAnthology"):
                     items = item.find_all("a", rel="ContributionToBookAnthology")
 
@@ -105,7 +106,7 @@ class Extract():
 
                     authors_with_link.append(f"{author}")
                     i += 1
-                
+
                 # get authors without link
                 for pub in item.find_all("span", class_="")[1:-1]:
                     if not Extract.check_author_in_author_links(authors_with_link, pub.text):
@@ -113,8 +114,8 @@ class Extract():
                         pub_object[f"author_{i}_profile"] = None
                         i += 1
 
-                self.__pubs.append(pub_object) 
-    
+                self.__pubs.append(pub_object)
+
     def run(self) -> None:
         '''
         Start Web scraping
@@ -125,9 +126,9 @@ class Extract():
     def result(self) -> None:
         if not self.__has_started:
             raise TypeError("Call start method before calling result method")
-        
+
         return self.__pubs
-    
+
     def result_tojson(self, path: str) -> None:
         '''
         Export results to json

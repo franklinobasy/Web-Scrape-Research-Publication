@@ -23,20 +23,21 @@ def load_json(path: str) -> List[dict]:
 
     if path.split('.')[-1] != 'json':
         raise ValueError('Expects a json file')
-    
+
     try:
         with open(path, 'r') as f:
             data = json.load(f)
 
     except FileNotFoundError:
         raise ValueError('Could not find file')
-    
+
     return data
+
 
 def convert_to_dataframe(path: str, columns: List[str] = []) -> pd.DataFrame:
     '''
     Convert data to dataframe
-    
+
     Arguments:
         data: list of dictionary object containing data
         columns: columns to return
@@ -53,6 +54,7 @@ def convert_to_dataframe(path: str, columns: List[str] = []) -> pd.DataFrame:
         df = df[columns]
 
     return df
+
 
 if __name__ == "__main__":
     # load and  transform

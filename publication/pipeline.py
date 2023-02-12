@@ -9,23 +9,24 @@ from publication.extract import Extract
 from publication.transform import convert_to_dataframe
 from publication.load import create_connection, dataframe_to_database, shutdown_connection
 
+
 class Pipeline():
     '''ETL pipeline'''
 
     def __init__(
-            self,
-            pipeline_name: str,
-            export_path: str,
-            connection_param: dict,
-            table_name: str
-        ) -> None:
-        
+                self,
+                pipeline_name: str,
+                export_path: str,
+                connection_param: dict,
+                table_name: str
+            ) -> None:
+
         self.pipeline_name = pipeline_name
         self.export_path = export_path
         self.connection_param = connection_param
         self.table_name = table_name
         self.df = None
-    
+
     def extract(self):
         '''extraction method'''
         print(">>>> STEP 1: Extraction started >>>>>")
@@ -42,7 +43,7 @@ class Pipeline():
         '''
         print(">>>> STEP 2: Transformation started >>>>>")
         print("\ttransformation in progress...")
-        
+
         self.df = convert_to_dataframe(self.export_path)
 
         print("[SUCCESS]: tranformation completed")
@@ -71,7 +72,6 @@ class Pipeline():
 
         print("[SUCCESS]: load to database completed")
 
-
     def execute(self):
         '''
         Run pipeline
@@ -79,4 +79,3 @@ class Pipeline():
         self.extract()
         self.transform()
         self.load()
-

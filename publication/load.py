@@ -7,8 +7,8 @@ author: Franklin Obasi <franklinobasy@gmail.com>
 
 from typing import List, Union
 import pandas as pd
-import psycopg2 as pg
 from sqlalchemy import create_engine
+
 
 def create_connection(user: str, password: str, database: str, host: str, port: str):
     '''
@@ -29,10 +29,11 @@ def create_connection(user: str, password: str, database: str, host: str, port: 
             f"postgresql://{user}:{password}@{host}:{port}/{database}"
         )
 
-    except:
+    except Exception:
         raise ValueError('Something went wrong while trying to connect to postgress.Make sure your credentials are valid'
                          )
     return connection
+
 
 def dataframe_to_database(connection, df: pd.DataFrame, table_name: str = 'publication') -> bool:
     '''
@@ -49,9 +50,10 @@ def dataframe_to_database(connection, df: pd.DataFrame, table_name: str = 'publi
 
     try:
         df.to_sql(table_name, connection, if_exists='replace')
-    except:
+    except Exception:
         return False
     return True
+
 
 def shutdown_connection(connection):
     '''
@@ -69,10 +71,11 @@ def shutdown_connection(connection):
                 conn.close()
         else:
             connection.close()
-    except:
+    except Exception:
         return False
-    
+
     return True
+
 
 if __name__ == "__main__":
     from transform import covert_to_dataframe
