@@ -66,7 +66,7 @@ def shutdown_connection(connection):
         True if connection closes successfully else False
     '''
     try:
-        if isinstance[connection, list]:
+        if isinstance(connection, list):
             for conn in connection:
                 conn.close()
         else:

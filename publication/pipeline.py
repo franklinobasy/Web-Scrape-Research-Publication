@@ -5,10 +5,17 @@ Module for ETL Pipeline
 author: Franklin Obasi <franklinobasy@gmail.com>
 '''
 
+import logging
+
 from publication.extract import Extract
 from publication.transform import convert_to_dataframe
 from publication.load import create_connection, dataframe_to_database, shutdown_connection
 
+import sys
+
+logging.basicConfig(format='%(process)d-%(levelname)s - %(asctime)s - %(message)s',
+                    stream=sys.stdout, level=logging.DEBUG
+                    )
 
 class Pipeline():
     '''ETL pipeline'''
@@ -29,48 +36,48 @@ class Pipeline():
 
     def extract(self):
         '''extraction method'''
-        print(">>>> STEP 1: Extraction started >>>>>")
-        print("\textraction in progress...")
+        logging.info(">>>> STEP 1: Extraction started >>>>>")
+        logging.info("extraction in progress...")
 
         extraction = Extract()
         extraction.run()
         extraction.result_tojson(self.export_path)
 
-        print("[SUCCESS]: Extraction completed")
+        logging.info("[SUCCESS]: Extraction completed")
 
     def transform(self):
         '''transform method
         '''
-        print(">>>> STEP 2: Transformation started >>>>>")
-        print("\ttransformation in progress...")
+        logging.info(">>>> STEP 2: Transformation started >>>>>")
+        logging.info("\ttransformation in progress...")
 
         self.df = convert_to_dataframe(self.export_path)
 
-        print("[SUCCESS]: tranformation completed")
+        logging.info("[SUCCESS]: tranformation completed")
 
     def load(self):
         '''load method'''
-        print(">>>> STEP 3: Load started >>>>>")
-        print("\tload in progress...")
+        logging.info(">>>> STEP 3: Load started >>>>>")
+        logging.info("load in progress...")
 
-        print("\tcreating connection...")
+        logging.info("creating connection...")
         connection = create_connection(**self.connection_param)
-        print("\tconnection established!")
+        logging.info("connection established!")
 
-        print("\tloading to database...")
+        logging.info("loading to database...")
         if dataframe_to_database(connection, self.df, self.table_name):
-            print("[SUCCESS]: Load to database successful")
+            logging.info("[SUCCESS]: Load to database successful")
         else:
-            print("[ERROR]: load to database failed")
+            logging.error("[ERROR]: load to database failed")
             raise Exception("[ERROR]: load to database failed")
 
-        print("\tshutting down database connection")
+        logging.info("shutting down database connection")
         if shutdown_connection(connection):
-            print("[SUCCESS]successfully shutdown connection")
+            logging.info("[SUCCESS]successfully shutdown connection")
         else:
-            print("[WARNING]: connection shutdown failed")
+            logging.warning("[WARNING]: connection shutdown failed")
 
-        print("[SUCCESS]: load to database completed")
+        logging.info("[SUCCESS]: load to database completed")
 
     def execute(self):
         '''
