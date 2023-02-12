@@ -35,11 +35,11 @@ from publication import Pipeline
 
 2. Instantiate the `pipeline` from the `Pipeline` class using the following arguments:
 
-  - `pipeline_name`: Custom or user-defined name for the pipelines. This helps you to distinguish different instance of the pipeline
+  - `pipeline_name`: Custom or user-defined name for the pipelines. This helps you to distinguish different instance of the `Pipeline`
   
   - `export-path`: The path to save the `json` file generated from the program. This path should contain a valid `json` file
   
-  - `connection-param`: A disctionary of the database credentials:
+  - `connection-param`: A dictionary of the database credentials:
     - `user`: postgres user name
     - `password`: user's password
     - `database`: name of the database
